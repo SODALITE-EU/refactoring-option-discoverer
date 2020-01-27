@@ -1,9 +1,9 @@
 package nl.jads.refactoringod;
 
-import kb.KBApi;
 import kb.dto.Attribute;
 import kb.dto.Node;
 import kb.dto.Property;
+import kb.repository.KB;
 import kb.utils.MyUtils;
 import kb.utils.QueryUtil;
 import org.eclipse.rdf4j.model.IRI;
@@ -17,8 +17,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RefactoringOptionDiscovererKBApi extends KBApi {
+public class RefactoringOptionDiscovererKBApi {
 
+    public static String DCTERMS = "http://purl.org/dc/terms/";
+    public static String DUL = "http://www.loa-cnr.it/ontologies/DUL.owl#";
+    public static String TOSCA = "https://www.sodalite.eu/ontologies/tosca/";
+    public static String SODA = "https://www.sodalite.eu/ontologies/sodalite-metamodel/";
     String PREFIXES = "PREFIX tosca: <https://www.sodalite.eu/ontologies/tosca/> \r\n" +
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \r\n" +
             "PREFIX soda: <https://www.sodalite.eu/ontologies/sodalite-metamodel/> \r\n" +
@@ -26,18 +30,34 @@ public class RefactoringOptionDiscovererKBApi extends KBApi {
             "PREFIX snow: <https://www.sodalite.eu/ontologies/snow-blueprint-containerized-OS/> \r\n" +
             "PREFIX dcterms: <http://purl.org/dc/terms/> \r\n" +
             "PREFIX owl: <http://www.w3.org/2002/07/owl#> \r\n";
+    private KB kb;
 
-    public static String DCTERMS = "http://purl.org/dc/terms/";
-    public static String DUL = "http://www.loa-cnr.it/ontologies/DUL.owl#";
-    public static String TOSCA = "https://www.sodalite.eu/ontologies/tosca/";
-    public static String SODA = "https://www.sodalite.eu/ontologies/sodalite-metamodel/";
+    public RefactoringOptionDiscovererKBApi(KB kb) {
+        this.kb = kb;
+    }
 
-    public RefactoringOptionDiscovererKBApi() {
-        super();
+    public static void main(String[] args) {
+        RefactoringOptionDiscovererKBApi kbApi = new RefactoringOptionDiscovererKBApi(new KB());
+        List<String> strings = new ArrayList<>();
+        strings.add("flavor");
+        strings.add("image");
+        Set<Node> nodes = kbApi.getComputeNodeInstances(strings,
+                "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )");
+        for (Node node : nodes) {
+            System.out.println(node.getUri());
+        }
+        List<String> strings1 = new ArrayList<>();
+        strings1.add("image_name");
+        strings1.add("exposed_ports");
+        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(strings1,
+                "( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
+        for (Node node : nodes1) {
+            System.out.println(node.getUri());
+        }
     }
 
     public void shutDown() {
-        super.shutDown();
+        this.kb.shutDown();
     }
 
     public Set<Attribute> getAllAttributes() throws IOException {
@@ -75,7 +95,7 @@ public class RefactoringOptionDiscovererKBApi extends KBApi {
             Property a = new Property(p1);
             a.setClassifiedBy(concept);
             if (_value != null)
-                a.setValue(_value, this);
+                a.setValue(_value, this.kb);
 
             properties.add(a);
         }
@@ -129,25 +149,5 @@ public class RefactoringOptionDiscovererKBApi extends KBApi {
         }
         result.close();
         return nodes;
-    }
-
-    public static void main(String[] args) {
-        RefactoringOptionDiscovererKBApi kbApi = new RefactoringOptionDiscovererKBApi();
-        List<String> strings = new ArrayList<>();
-        strings.add("flavor");
-        strings.add("image");
-        Set<Node> nodes = kbApi.getComputeNodeInstances(strings,
-                "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )");
-        for (Node node : nodes) {
-            System.out.println(node.getUri());
-        }
-        List<String> strings1 = new ArrayList<>();
-        strings1.add("image_name");
-        strings1.add("exposed_ports");
-        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(strings1,
-                "( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
-        for (Node node : nodes1) {
-            System.out.println(node.getUri());
-        }
     }
 }
