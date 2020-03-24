@@ -1,4 +1,8 @@
 ## refactoring-option-discoverer
+
+This module implements the discovery of new nodes and resources by using semantic matchmaking.
+
+## Prerequisites
 This module depends on the SODALITE sub-project “semantic-reasoner”. Thus, first built it
 
 The information about building semantic reasoner can be found at
