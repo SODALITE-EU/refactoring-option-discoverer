@@ -4,7 +4,7 @@ This module depends on the SODALITE sub-project “semantic-reasoner”. Thus, f
 The information about building semantic reasoner can be found at
  ` https://github.com/SODALITE-EU/semantic-reasoner `
 
-Then, use `maven` to build this module project.
+Then, use `maven` to build this project.
 ```
 mvn clean install 
 ```
