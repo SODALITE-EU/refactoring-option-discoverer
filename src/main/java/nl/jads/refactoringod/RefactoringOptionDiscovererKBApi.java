@@ -130,7 +130,7 @@ public class RefactoringOptionDiscovererKBApi {
             i++;
         }
         query.append(" Filter (").append(expr).append(")}");
-//        System.out.println(query);
+        System.out.println(query);
         TupleQueryResult result = QueryUtil.evaluateSelectQuery(kb.getConnection(), query.toString());
 
         while (result.hasNext()) {
