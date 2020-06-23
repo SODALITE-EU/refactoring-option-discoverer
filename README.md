@@ -19,3 +19,14 @@ This requires maven 3.x
 ## Deployment
 
 The built artifact is a jar file that can be used by other components (e.g., ml and rule-based refactoring)
+
+## Docker Image Building and Usage
+```
+sudo docker build -t sodalite/refactoring-option-discoverer .
+sudo docker run -p 8080:8080 -d --name=refactoring-option-discoverer sodalite/refactoring-option-discoverer
+sudo docker start refactoring-option-discoverer
+sudo docker logs refactoring-option-discoverer
+sudo docker stop refactoring-option-discoverer
+sudo docker rm  refactoring-option-discoverer
+sudo docker rmi sodalite/refactoring-option-discoverer
+```
