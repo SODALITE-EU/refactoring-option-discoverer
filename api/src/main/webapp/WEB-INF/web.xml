@@ -1,41 +1,42 @@
 <!DOCTYPE web-app PUBLIC
-		"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-		"http://java.sun.com/dtd/web-app_2_3.dtd" >
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>Refactoring Option  Discoverer REST API</display-name>
-	<servlet>
-		<servlet-name>refactoring-option-discoverer-api</servlet-name>
-		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>
-				io.swagger.jaxrs.json,
-				io.swagger.jaxrs.listing,
-				nl.jads.refactoringod,
-				nl.jads.refactoringod.dto,
-				kb.dto,
-				nl.jads.refactoringod.restapi
-			</param-value>
-		</init-param>
-		<init-param>
-			<param-name>jersey.config.server.provider.classnames</param-name>
-			<param-value>org.glassfish.jersey.filter.LoggingFilter;
-				org.glassfish.jersey.media.multipart.MultiPartFeature;org.glassfish.jersey.jackson.JacksonFeature</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>refactoring-option-discoverer-api</servlet-name>
-		<url-pattern>/v0.1/*</url-pattern>
-	</servlet-mapping>
-	<filter>
-		<filter-name>CorsFilter</filter-name>
-		<filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CorsFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+    <display-name>Refactoring Option Discoverer REST API</display-name>
+    <servlet>
+        <servlet-name>refactoring-option-discoverer-api</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                io.swagger.jaxrs.json,
+                io.swagger.jaxrs.listing,
+                nl.jads.refactoringod,
+                nl.jads.refactoringod.dto,
+                kb.dto,
+                nl.jads.refactoringod.restapi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.filter.LoggingFilter;
+                org.glassfish.jersey.media.multipart.MultiPartFeature;org.glassfish.jersey.jackson.JacksonFeature
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>refactoring-option-discoverer-api</servlet-name>
+        <url-pattern>/v0.1/*</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>

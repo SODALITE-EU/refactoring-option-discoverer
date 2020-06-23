@@ -11,6 +11,7 @@ public class FindNodeInput {
     private String expr;
     private String repository;
     private String server;
+
     public List<String> getVars() {
         return vars;
     }
