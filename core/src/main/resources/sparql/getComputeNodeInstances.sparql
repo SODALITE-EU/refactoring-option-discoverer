@@ -1,0 +1,19 @@
+select DISTINCT ?node ?description ?nodetype
+where {
+	?nodetype rdfs:subClassOf tosca:tosca.nodes.Compute .
+	?node rdf:type ?nodetype .
+	OPTIONAL {?node dcterms:description ?description .}
+	FILTER (?nodetype != tosca:tosca.nodes.Compute ) .
+	FILTER (?node != owl:Nothing) .
+	?node soda:hasContext ?context .
+    {
+    ?context tosca:properties ?concept .
+    OPTIONAL {?concept DUL:classifies snow:flavor .}
+    OPTIONAL {?concept tosca:hasDataValue ?flavor .}
+    }
+    {?context tosca:properties ?concept1 .
+        OPTIONAL {?concept1 DUL:classifies snow:image .}
+        OPTIONAL {?concept1 tosca:hasDataValue ?image .}
+    }
+	FILTER ( ( ?flavor = "m1.small" ) && ( ?image = "centos7" ))
+}

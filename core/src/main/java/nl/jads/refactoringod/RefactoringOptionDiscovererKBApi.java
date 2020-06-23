@@ -6,6 +6,7 @@ import kb.dto.Property;
 import kb.repository.KB;
 import kb.utils.MyUtils;
 import kb.utils.QueryUtil;
+import nl.jads.refactoringod.dto.FindNodeInput;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.BindingSet;
@@ -41,16 +42,21 @@ public class RefactoringOptionDiscovererKBApi {
         List<String> strings = new ArrayList<>();
         strings.add("flavor");
         strings.add("image");
-        Set<Node> nodes = kbApi.getComputeNodeInstances(strings,
+        FindNodeInput findNodeInput = new FindNodeInput();
+        findNodeInput.setVars(strings);
+        findNodeInput.setExpr(
                 "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )");
+        Set<Node> nodes = kbApi.getComputeNodeInstances(findNodeInput);
         for (Node node : nodes) {
             System.out.println(node.getUri());
         }
         List<String> strings1 = new ArrayList<>();
         strings1.add("image_name");
         strings1.add("exposed_ports");
-        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(strings1,
-                "( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
+        FindNodeInput findNodeInput1 = new FindNodeInput();
+        findNodeInput1.setVars(strings1);
+        findNodeInput1.setExpr("( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
+        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(findNodeInput1);
         for (Node node : nodes1) {
             System.out.println(node.getUri());
         }
@@ -103,12 +109,12 @@ public class RefactoringOptionDiscovererKBApi {
         return properties;
     }
 
-    public Set<Node> getComputeNodeInstances(List<String> parameters, String expr) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", parameters, expr);
+    public Set<Node> getComputeNodeInstances(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr());
     }
 
-    public Set<Node> getSoftwareComponentNodeInstances(List<String> parameters, String expr) {
-        return getNodeInstances("tosca:tosca.nodes.SoftwareComponent", parameters, expr);
+    public Set<Node> getSoftwareComponentNodeInstances(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca:tosca.nodes.SoftwareComponent", findNodeInput.getVars(), findNodeInput.getExpr());
     }
 
     private Set<Node> getNodeInstances(String nodeType, List<String> parameters, String expr) {

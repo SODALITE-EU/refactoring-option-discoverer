@@ -2,6 +2,7 @@ import kb.dto.Node;
 import kb.repository.KB;
 import kb.repository.SodaliteRepository;
 import nl.jads.refactoringod.RefactoringOptionDiscovererKBApi;
+import nl.jads.refactoringod.dto.FindNodeInput;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -86,16 +87,21 @@ public class RefOptionDiscovererlTest {
         List<String> strings = new ArrayList<>();
         strings.add("flavor");
         strings.add("image");
-        Set<Node> nodes = kbApi.getComputeNodeInstances(strings,
+        FindNodeInput findNodeInput = new FindNodeInput();
+        findNodeInput.setExpr(
                 "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )");
+        findNodeInput.setVars(strings);
+        Set<Node> nodes = kbApi.getComputeNodeInstances(findNodeInput);
         for (Node node : nodes) {
             System.out.println(node.getUri());
         }
         List<String> strings1 = new ArrayList<>();
         strings1.add("image_name");
         strings1.add("exposed_ports");
-        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(strings1,
-                "( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
+        FindNodeInput findNodeInput1 = new FindNodeInput();
+        findNodeInput1.setVars(strings1);
+        findNodeInput1.setExpr("( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
+        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(findNodeInput1);
         for (Node node : nodes1) {
             assertNotNull(node);
             System.out.println(node.getUri());
