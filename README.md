@@ -30,3 +30,20 @@ sudo docker stop refactoring-option-discoverer
 sudo docker rm  refactoring-option-discoverer
 sudo docker rmi sodalite/refactoring-option-discoverer
 ```
+## Refactoring Option Discovery REST APIs 
+
+To find compute nodes or software nodes
+```
+http://{serverIP}:8080/refactoring-option-discoverer-api/v0.1/refactoringoptions/computenodes
+http://{ serverIP}:8080/refactoring-option-discoverer-api/v0.1/refactoringoptions/softwarenodes
+```
+An Example Request 
+```
+{
+	 "vars" : [
+        "flavor",
+        "image"
+    ],
+	"expr" : "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )"
+}
+```
