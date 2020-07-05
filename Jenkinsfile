@@ -25,6 +25,26 @@ pipeline {
         archiveArtifacts artifacts: '**/*.war, **/*.jar', onlyIfSuccessful: true
       }
     }
+	stage('Build docker images') {
+            steps {
+                sh "cd docker build -t refactoring_option_discoverer -f Dockerfile ."                
+            }
+    }   
+    stage('Push Dockerfile to DockerHub') {
+            when {
+               branch "master"
+            }
+            steps {
+                withDockerRegistry(credentialsId: 'jenkins-sodalite.docker_token', url: '') {
+                    sh  """#!/bin/bash                       
+                            docker tag refactoring_option_discoverer sodaliteh2020/refactoring_option_discoverer:${BUILD_NUMBER}
+                            docker tag refactoring_option_discoverer sodaliteh2020/refactoring_option_discoverer
+                            docker push sodaliteh2020/refactoring_option_discoverer:${BUILD_NUMBER}
+                            docker push sodaliteh2020/refactoring_option_discoverer
+                        """
+                }
+            }
+    }
   }
   post {
     failure {
