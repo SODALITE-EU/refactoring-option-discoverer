@@ -48,7 +48,10 @@ public class RefactoringOptionDiscovererService {
     private KB getKB(FindNodeInput findBugInput) {
         String server = findBugInput.getServer();
         if (server == null || "".equals(server.trim())) {
-            server = KB.SERVER_URL;
+            server = System.getenv("graphdb");
+            if (server == null || "".equals(server.trim())) {
+                server = KB.SERVER_URL;
+            }
         }
         String repo = findBugInput.getRepository();
         if (repo == null || "".equals(repo.trim())) {
