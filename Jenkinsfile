@@ -27,7 +27,7 @@ pipeline {
     }
 	stage('Build docker images') {
             steps {
-                sh "cd docker build -t refactoring_option_discoverer -f Dockerfile ."                
+                sh "docker build -t refactoring_option_discoverer -f Dockerfile ."                
             }
     }   
     stage('Push Dockerfile to DockerHub') {
