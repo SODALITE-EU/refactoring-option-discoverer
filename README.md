@@ -10,7 +10,7 @@ The information about building semantic reasoner can be found at
 
 ## Build Process 
 
-Use `maven` to build this project.
+Use `maven` to build this project. 
 ```
 mvn clean install 
 ```
