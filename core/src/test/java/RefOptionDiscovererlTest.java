@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -22,7 +23,7 @@ public class RefOptionDiscovererlTest {
     private static SodaliteRepository repositoryManager;
     private static Repository repository;
     private static KB kb;
-
+    private static final Logger log = Logger.getLogger(RefOptionDiscovererlTest.class.getName());
     @BeforeAll
     static void beforeAll() {
         repositoryManager = new SodaliteRepository(".", "/config.ttl");
@@ -37,7 +38,7 @@ public class RefOptionDiscovererlTest {
                     RefOptionDiscovererlTest.class.getResourceAsStream("/import/DUL.rdf");
             repositoryConnection.add(input, "", RDFFormat.RDFXML);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         // add the RDF data from the inputstream directly to our database
         try {
@@ -45,7 +46,7 @@ public class RefOptionDiscovererlTest {
                     RefOptionDiscovererlTest.class.getResourceAsStream("/core/sodalite-metamodel.ttl");
             repositoryConnection.add(input, "", RDFFormat.TURTLE);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         // add the RDF data from the inputstream directly to our database
         try {
@@ -53,7 +54,7 @@ public class RefOptionDiscovererlTest {
                     RefOptionDiscovererlTest.class.getResourceAsStream("/core/tosca-builtins.ttl");
             repositoryConnection.add(input, "", RDFFormat.TURTLE);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         // add the RDF data from the inputstream directly to our database
         try {
@@ -61,7 +62,7 @@ public class RefOptionDiscovererlTest {
                     RefOptionDiscovererlTest.class.getResourceAsStream("/snow/snow_tier1.ttl");
             repositoryConnection.add(input, "", RDFFormat.TURTLE);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         // add the RDF data from the inputstream directly to our database
         try {
@@ -69,7 +70,7 @@ public class RefOptionDiscovererlTest {
                     RefOptionDiscovererlTest.class.getResourceAsStream("/snow/snow_tier2.ttl");
             repositoryConnection.add(input, "", RDFFormat.TURTLE);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         repositoryConnection.close();
     }
@@ -93,7 +94,7 @@ public class RefOptionDiscovererlTest {
         findNodeInput.setVars(strings);
         Set<Node> nodes = kbApi.getComputeNodeInstances(findNodeInput);
         for (Node node : nodes) {
-            System.out.println(node.getUri());
+            log.info(node.getUri());
         }
         List<String> strings1 = new ArrayList<>();
         strings1.add("image_name");
@@ -104,7 +105,7 @@ public class RefOptionDiscovererlTest {
         Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(findNodeInput1);
         for (Node node : nodes1) {
             assertNotNull(node);
-            System.out.println(node.getUri());
+            log.info(node.getUri());
         }
     }
 

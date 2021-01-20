@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class RefactoringOptionDiscovererKBApi {
 
@@ -32,7 +33,7 @@ public class RefactoringOptionDiscovererKBApi {
             "PREFIX dcterms: <http://purl.org/dc/terms/> \r\n" +
             "PREFIX owl: <http://www.w3.org/2002/07/owl#> \r\n";
     private KB kb;
-
+    private static final Logger log = Logger.getLogger(RefactoringOptionDiscovererKBApi.class.getName());
     public RefactoringOptionDiscovererKBApi(KB kb) {
         this.kb = kb;
     }
@@ -48,7 +49,7 @@ public class RefactoringOptionDiscovererKBApi {
                 "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )");
         Set<Node> nodes = kbApi.getComputeNodeInstances(findNodeInput);
         for (Node node : nodes) {
-            System.out.println(node.getUri());
+            log.info(node.getUri());
         }
         List<String> strings1 = new ArrayList<>();
         strings1.add("image_name");
@@ -58,7 +59,7 @@ public class RefactoringOptionDiscovererKBApi {
         findNodeInput1.setExpr("( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
         Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(findNodeInput1);
         for (Node node : nodes1) {
-            System.out.println(node.getUri());
+            log.info(node.getUri());
         }
     }
 
@@ -136,7 +137,6 @@ public class RefactoringOptionDiscovererKBApi {
             i++;
         }
         query.append(" Filter (").append(expr).append(")}");
-        System.out.println(query);
         TupleQueryResult result = QueryUtil.evaluateSelectQuery(kb.getConnection(), query.toString());
 
         while (result.hasNext()) {
