@@ -77,10 +77,8 @@ public class RefactoringOptionDiscovererKBApi {
             BindingSet bindingSet = result.next();
             IRI attr = (IRI) bindingSet.getBinding("attribute").getValue();
             IRI concept = (IRI) bindingSet.getBinding("p").getValue();
-
             Attribute a = new Attribute(attr);
             a.setClassifiedBy(concept);
-
             attributes.add(a);
         }
         result.close();
@@ -98,12 +96,10 @@ public class RefactoringOptionDiscovererKBApi {
             IRI p1 = (IRI) bindingSet.getBinding("property").getValue();
             IRI concept = (IRI) bindingSet.getBinding("concept").getValue();
             Value _value = bindingSet.hasBinding("value") ? bindingSet.getBinding("value").getValue() : null;
-
             Property a = new Property(p1);
             a.setClassifiedBy(concept);
             if (_value != null)
                 a.setValue(_value, this.kb);
-
             properties.add(a);
         }
         result.close();

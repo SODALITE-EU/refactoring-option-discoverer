@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,54 +23,18 @@ public class RefOptionDiscovererlTest {
     private static Repository repository;
     private static KB kb;
     private static final Logger log = Logger.getLogger(RefOptionDiscovererlTest.class.getName());
+
     @BeforeAll
-    static void beforeAll() {
+    static void beforeAll() throws IOException {
         repositoryManager = new SodaliteRepository(".", "/config.ttl");
         kb = new KB(repositoryManager, "TOSCA");
-
         repository = repositoryManager.getRepository("TOSCA");
-
         RepositoryConnection repositoryConnection = repository.getConnection();
-        // add the RDF data from the inputstream directly to our database
-        try {
-            InputStream input =
-                    RefOptionDiscovererlTest.class.getResourceAsStream("/import/DUL.rdf");
-            repositoryConnection.add(input, "", RDFFormat.RDFXML);
-        } catch (IOException e) {
-            log.warning(e.getMessage());
-        }
-        // add the RDF data from the inputstream directly to our database
-        try {
-            InputStream input =
-                    RefOptionDiscovererlTest.class.getResourceAsStream("/core/sodalite-metamodel.ttl");
-            repositoryConnection.add(input, "", RDFFormat.TURTLE);
-        } catch (IOException e) {
-            log.warning(e.getMessage());
-        }
-        // add the RDF data from the inputstream directly to our database
-        try {
-            InputStream input =
-                    RefOptionDiscovererlTest.class.getResourceAsStream("/core/tosca-builtins.ttl");
-            repositoryConnection.add(input, "", RDFFormat.TURTLE);
-        } catch (IOException e) {
-            log.warning(e.getMessage());
-        }
-        // add the RDF data from the inputstream directly to our database
-        try {
-            InputStream input =
-                    RefOptionDiscovererlTest.class.getResourceAsStream("/snow/snow_tier1.ttl");
-            repositoryConnection.add(input, "", RDFFormat.TURTLE);
-        } catch (IOException e) {
-            log.warning(e.getMessage());
-        }
-        // add the RDF data from the inputstream directly to our database
-        try {
-            InputStream input =
-                    RefOptionDiscovererlTest.class.getResourceAsStream("/snow/snow_tier2.ttl");
-            repositoryConnection.add(input, "", RDFFormat.TURTLE);
-        } catch (IOException e) {
-            log.warning(e.getMessage());
-        }
+        repositoryConnection.add(RefOptionDiscovererlTest.class.getResourceAsStream("/import/DUL.rdf"), "", RDFFormat.RDFXML);
+        repositoryConnection.add(RefOptionDiscovererlTest.class.getResourceAsStream("/core/sodalite-metamodel.ttl"), "", RDFFormat.TURTLE);
+        repositoryConnection.add(RefOptionDiscovererlTest.class.getResourceAsStream("/core/tosca-builtins.ttl"), "", RDFFormat.TURTLE);
+        repositoryConnection.add(RefOptionDiscovererlTest.class.getResourceAsStream("/snow/snow_tier1.ttl"), "", RDFFormat.TURTLE);
+        repositoryConnection.add(RefOptionDiscovererlTest.class.getResourceAsStream("/snow/snow_tier2.ttl"), "", RDFFormat.TURTLE);
         repositoryConnection.close();
     }
 
@@ -108,5 +71,4 @@ public class RefOptionDiscovererlTest {
             log.info(node.getUri());
         }
     }
-
 }
