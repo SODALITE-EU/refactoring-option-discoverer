@@ -34,33 +34,9 @@ public class RefactoringOptionDiscovererKBApi {
             "PREFIX owl: <http://www.w3.org/2002/07/owl#> \r\n";
     private KB kb;
     private static final Logger log = Logger.getLogger(RefactoringOptionDiscovererKBApi.class.getName());
+
     public RefactoringOptionDiscovererKBApi(KB kb) {
         this.kb = kb;
-    }
-
-    public static void main(String[] args) {
-        RefactoringOptionDiscovererKBApi kbApi = new RefactoringOptionDiscovererKBApi(new KB());
-        List<String> strings = new ArrayList<>();
-        strings.add("flavor");
-        strings.add("image");
-        FindNodeInput findNodeInput = new FindNodeInput();
-        findNodeInput.setVars(strings);
-        findNodeInput.setExpr(
-                "( ?flavor = \"m1.small\" ) && ( ?image = \"centos7\" )");
-        Set<Node> nodes = kbApi.getComputeNodeInstances(findNodeInput);
-        for (Node node : nodes) {
-            log.info(node.getUri());
-        }
-        List<String> strings1 = new ArrayList<>();
-        strings1.add("image_name");
-        strings1.add("exposed_ports");
-        FindNodeInput findNodeInput1 = new FindNodeInput();
-        findNodeInput1.setVars(strings1);
-        findNodeInput1.setExpr("( ?image_name = \"snow-skyline-extractor\" ) && ( ?exposed_ports = \"8080\" )");
-        Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(findNodeInput1);
-        for (Node node : nodes1) {
-            log.info(node.getUri());
-        }
     }
 
     public void shutDown() {
@@ -72,7 +48,6 @@ public class RefactoringOptionDiscovererKBApi {
         String sparql = MyUtils.fileToString("sparql/getAllAttributes.sparql");
         String query = PREFIXES + sparql;
         TupleQueryResult result = QueryUtil.evaluateSelectQuery(kb.getConnection(), query);
-
         while (result.hasNext()) {
             BindingSet bindingSet = result.next();
             IRI attr = (IRI) bindingSet.getBinding("attribute").getValue();
@@ -90,16 +65,15 @@ public class RefactoringOptionDiscovererKBApi {
         String sparql = MyUtils.fileToString("sparql/getAllProperties.sparql");
         String query = PREFIXES + sparql;
         TupleQueryResult result = QueryUtil.evaluateSelectQuery(kb.getConnection(), query);
-
         while (result.hasNext()) {
             BindingSet bindingSet = result.next();
             IRI p1 = (IRI) bindingSet.getBinding("property").getValue();
             IRI concept = (IRI) bindingSet.getBinding("concept").getValue();
-            Value _value = bindingSet.hasBinding("value") ? bindingSet.getBinding("value").getValue() : null;
+            Value value = bindingSet.hasBinding("value") ? bindingSet.getBinding("value").getValue() : null;
             Property a = new Property(p1);
             a.setClassifiedBy(concept);
-            if (_value != null)
-                a.setValue(_value, this.kb);
+            if (value != null)
+                a.setValue(value, this.kb);
             properties.add(a);
         }
         result.close();
@@ -142,11 +116,9 @@ public class RefactoringOptionDiscovererKBApi {
                     ? bindingSet.getBinding("description").getValue().stringValue()
                     : null;
             IRI superclass = (IRI) bindingSet.getBinding("nodetype").getValue();
-
             Node n = new Node(node);
             n.setDescription(description);
             n.setType(superclass);
-
             nodes.add(n);
         }
         result.close();

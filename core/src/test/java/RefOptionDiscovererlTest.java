@@ -57,6 +57,8 @@ public class RefOptionDiscovererlTest {
         findNodeInput.setVars(strings);
         Set<Node> nodes = kbApi.getComputeNodeInstances(findNodeInput);
         for (Node node : nodes) {
+            assertNotNull(node);
+            assertNotNull(node.getUri());
             log.info(node.getUri());
         }
         List<String> strings1 = new ArrayList<>();
@@ -68,6 +70,7 @@ public class RefOptionDiscovererlTest {
         Set<Node> nodes1 = kbApi.getSoftwareComponentNodeInstances(findNodeInput1);
         for (Node node : nodes1) {
             assertNotNull(node);
+            assertNotNull(node.getUri());
             log.info(node.getUri());
         }
     }
