@@ -13,11 +13,9 @@ import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class RefactoringOptionDiscovererKBApi {
 
@@ -33,7 +31,6 @@ public class RefactoringOptionDiscovererKBApi {
             "PREFIX dcterms: <http://purl.org/dc/terms/> \r\n" +
             "PREFIX owl: <http://www.w3.org/2002/07/owl#> \r\n";
     private KB kb;
-    private static final Logger log = Logger.getLogger(RefactoringOptionDiscovererKBApi.class.getName());
 
     public RefactoringOptionDiscovererKBApi(KB kb) {
         this.kb = kb;
@@ -43,7 +40,7 @@ public class RefactoringOptionDiscovererKBApi {
         this.kb.shutDown();
     }
 
-    public Set<Attribute> getAllAttributes() throws IOException {
+    private Set<Attribute> getAllAttributes() throws IOException {
         Set<Attribute> attributes = new HashSet<>();
         String sparql = MyUtils.fileToString("sparql/getAllAttributes.sparql");
         String query = PREFIXES + sparql;
@@ -60,7 +57,7 @@ public class RefactoringOptionDiscovererKBApi {
         return attributes;
     }
 
-    public Set<Property> getProperties() throws IOException {
+    private Set<Property> getProperties() throws IOException {
         Set<Property> properties = new HashSet<>();
         String sparql = MyUtils.fileToString("sparql/getAllProperties.sparql");
         String query = PREFIXES + sparql;
