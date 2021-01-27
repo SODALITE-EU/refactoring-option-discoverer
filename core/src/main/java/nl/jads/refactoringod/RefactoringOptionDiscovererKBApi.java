@@ -65,8 +65,7 @@ public class RefactoringOptionDiscovererKBApi {
             Value value = bindingSet.hasBinding("value") ? bindingSet.getBinding("value").getValue() : null;
             Property a = new Property(p1);
             a.setClassifiedBy(concept);
-            if (value != null)
-                a.setValue(value, this.kb);
+            a.setValue(value, this.kb);
             properties.add(a);
         }
         result.close();
