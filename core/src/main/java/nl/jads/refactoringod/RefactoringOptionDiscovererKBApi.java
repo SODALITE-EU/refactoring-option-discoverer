@@ -40,7 +40,7 @@ public class RefactoringOptionDiscovererKBApi {
         this.kb.shutDown();
     }
 
-    private Set<Attribute> getAllAttributes() throws IOException {
+    public Set<Attribute> getAllAttributes() throws IOException {
         Set<Attribute> attributes = new HashSet<>();
         String sparql = MyUtils.fileToString("sparql/getAllAttributes.sparql");
         String query = PREFIXES + sparql;
@@ -57,7 +57,7 @@ public class RefactoringOptionDiscovererKBApi {
         return attributes;
     }
 
-    private Set<Property> getProperties() throws IOException {
+    public Set<Property> getProperties() throws IOException {
         Set<Property> properties = new HashSet<>();
         String sparql = MyUtils.fileToString("sparql/getAllProperties.sparql");
         String query = PREFIXES + sparql;

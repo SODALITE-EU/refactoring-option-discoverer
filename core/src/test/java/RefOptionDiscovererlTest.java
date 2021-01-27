@@ -1,4 +1,6 @@
+import kb.dto.Attribute;
 import kb.dto.Node;
+import kb.dto.Property;
 import kb.repository.KB;
 import kb.repository.SodaliteRepository;
 import nl.jads.refactoringod.RefactoringOptionDiscovererKBApi;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class RefOptionDiscovererlTest {
@@ -43,6 +46,22 @@ public class RefOptionDiscovererlTest {
         repository.shutDown();
         repositoryManager.removeRepository("TOSCA");
         repositoryManager.shutDown("TEST");
+    }
+
+    @Test
+    void testGetAllAttributes() throws IOException {
+        RefactoringOptionDiscovererKBApi kbApi = new RefactoringOptionDiscovererKBApi(kb);
+        Set<Attribute> attributes = kbApi.getAllAttributes();
+        assertNotNull(attributes);
+        assertEquals(attributes.size(), 15);
+    }
+
+    @Test
+    void testGetProperties() throws IOException {
+        RefactoringOptionDiscovererKBApi kbApi = new RefactoringOptionDiscovererKBApi(kb);
+        Set<Property> properties = kbApi.getProperties();
+        assertNotNull(properties);
+        assertEquals(properties.size(), 65);
     }
 
     @Test
