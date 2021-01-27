@@ -8,6 +8,7 @@ import nl.jads.refactoringod.dto.FindNodeInput;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,9 @@ public class RefOptionDiscovererlTest {
         Set<Attribute> attributes = kbApi.getAllAttributes();
         assertNotNull(attributes);
         assertEquals(attributes.size(), 15);
+        for (Attribute attribute : attributes) {
+            assertNotNull(attribute);
+        }
     }
 
     @Test
@@ -62,6 +66,9 @@ public class RefOptionDiscovererlTest {
         Set<Property> properties = kbApi.getProperties();
         assertNotNull(properties);
         assertEquals(properties.size(), 65);
+        for (Property p : properties) {
+           assertNotNull(p);
+        }
     }
 
     @Test
