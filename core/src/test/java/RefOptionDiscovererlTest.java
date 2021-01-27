@@ -8,7 +8,6 @@ import nl.jads.refactoringod.dto.FindNodeInput;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,8 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class RefOptionDiscovererlTest {
     private static SodaliteRepository repositoryManager;
@@ -67,8 +65,16 @@ public class RefOptionDiscovererlTest {
         assertNotNull(properties);
         assertEquals(properties.size(), 65);
         for (Property p : properties) {
-           assertNotNull(p);
+            assertNotNull(p);
+            if (p.getValue() != null) {
+                assertNotEquals(0, p.getValue().length());
+            }
         }
+    }
+
+    @Test
+    void testGetKb() throws IOException {
+        assertNotNull(new RefactoringOptionDiscovererKBApi(kb).getKb());
     }
 
     @Test
@@ -85,6 +91,10 @@ public class RefOptionDiscovererlTest {
         for (Node node : nodes) {
             assertNotNull(node);
             assertNotNull(node.getUri());
+            String d = node.getDescription();
+            if (d != null) {
+                assertNotEquals(0, d.length());
+            }
             log.info(node.getUri());
         }
         List<String> strings1 = new ArrayList<>();

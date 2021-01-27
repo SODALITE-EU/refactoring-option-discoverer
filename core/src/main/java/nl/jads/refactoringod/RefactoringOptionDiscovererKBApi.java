@@ -36,10 +36,6 @@ public class RefactoringOptionDiscovererKBApi {
         this.kb = kb;
     }
 
-    public void shutDown() {
-        this.kb.shutDown();
-    }
-
     public Set<Attribute> getAllAttributes() throws IOException {
         Set<Attribute> attributes = new HashSet<>();
         String sparql = MyUtils.fileToString("sparql/getAllAttributes.sparql");
@@ -120,5 +116,9 @@ public class RefactoringOptionDiscovererKBApi {
         }
         result.close();
         return nodes;
+    }
+
+    public KB getKb() {
+        return kb;
     }
 }
