@@ -73,14 +73,34 @@ public class RefactoringOptionDiscovererKBApi {
     }
 
     public Set<Node> getComputeNodeInstances(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr());
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties");
     }
 
     public Set<Node> getSoftwareComponentNodeInstances(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.SoftwareComponent", findNodeInput.getVars(), findNodeInput.getExpr());
+        return getNodeInstances("tosca:tosca.nodes.SoftwareComponent", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties");
     }
 
-    private Set<Node> getNodeInstances(String nodeType, List<String> parameters, String expr) {
+    public Set<Node> getPolicies(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca.policies.Root", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties");
+    }
+
+    public Set<Node> getNodeMatchingRequirements(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:requirements");
+    }
+
+    public Set<Node> getNodeMatchingCapabilities(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:capabilities");
+    }
+
+    public Set<Node> getSoftwareComponentNodeMatchingRequirements(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:requirements");
+    }
+
+    public Set<Node> getSoftwareComponentNodeMatchingCapabilities(FindNodeInput findNodeInput) {
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:capabilities");
+    }
+
+    private Set<Node> getNodeInstances(String nodeType, List<String> parameters, String expr, String propType) {
         Set<Node> nodes = new HashSet<>();
         StringBuilder query = new StringBuilder(PREFIXES + "select DISTINCT ?node ?description ?nodetype\n" +
                 "where {\n" +
@@ -92,7 +112,7 @@ public class RefactoringOptionDiscovererKBApi {
                 "\t?node soda:hasContext ?context .");
         int i = 0;
         for (String name : parameters) {
-            query.append("{\n").append("    ?context tosca:properties ?concept").append(i).append(" .\n")
+            query.append("{\n").append("    ?context ").append(propType).append(" ?concept").append(i).append(" .\n")
                     .append("    OPTIONAL {?concept").append(i).append(" DUL:classifies snow:").append(name)
                     .append(" .}\n").append("    OPTIONAL {?concept").append(i).append(" tosca:hasDataValue ?")
                     .append(name).append(" .}\n").append("    }");
