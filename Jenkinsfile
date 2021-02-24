@@ -22,7 +22,6 @@ pipeline {
         sh  """ #!/bin/bash
                 mvn clean install
             """
-        archiveArtifacts artifacts: '**/*.war, **/*.jar', onlyIfSuccessful: true
       }
     }
 	stage('SonarQube analysis'){
