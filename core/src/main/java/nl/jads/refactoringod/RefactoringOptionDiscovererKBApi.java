@@ -73,43 +73,55 @@ public class RefactoringOptionDiscovererKBApi {
     }
 
     public Set<Node> getComputeNodeInstances(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties");
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(),
+                findNodeInput.getExpr(), "tosca:properties", findNodeInput.getAadm());
     }
 
     public Set<Node> getSoftwareComponentNodeInstances(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.SoftwareComponent", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties");
+        return getNodeInstances("tosca:tosca.nodes.SoftwareComponent",
+                findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties",
+                findNodeInput.getAadm());
     }
 
     public Set<Node> getPolicies(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca.policies.Root", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:properties");
+        return getNodeInstances("tosca.policies.Root", findNodeInput.getVars(),
+                findNodeInput.getExpr(), "tosca:properties", findNodeInput.getAadm());
     }
 
     public Set<Node> getNodeMatchingRequirements(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:requirements");
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(),
+                findNodeInput.getExpr(), "tosca:requirements", findNodeInput.getAadm());
     }
 
     public Set<Node> getNodeMatchingCapabilities(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:capabilities");
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(),
+                findNodeInput.getExpr(), "tosca:capabilities", findNodeInput.getAadm());
     }
 
     public Set<Node> getSoftwareComponentNodeMatchingRequirements(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:requirements");
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(),
+                findNodeInput.getExpr(), "tosca:requirements", findNodeInput.getAadm());
     }
 
     public Set<Node> getSoftwareComponentNodeMatchingCapabilities(FindNodeInput findNodeInput) {
-        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(), findNodeInput.getExpr(), "tosca:capabilities");
+        return getNodeInstances("tosca:tosca.nodes.Compute", findNodeInput.getVars(),
+                findNodeInput.getExpr(), "tosca:capabilities", findNodeInput.getAadm());
     }
 
-    private Set<Node> getNodeInstances(String nodeType, List<String> parameters, String expr, String propType) {
+    private Set<Node> getNodeInstances(String nodeType, List<String> parameters, String expr,
+                                       String propType, String aadm) {
         Set<Node> nodes = new HashSet<>();
         StringBuilder query = new StringBuilder(PREFIXES + "select DISTINCT ?node ?description ?nodetype\n" +
                 "where {\n" +
                 "\t?nodetype rdfs:subClassOf " + nodeType + " .\n" +
-                "\t?node rdf:type ?nodetype .\n" +
-                "\tOPTIONAL {?node dcterms:description ?description .}\n" +
-                "\tFILTER (?nodetype != " + nodeType + " ) .\n" +
-                "\tFILTER (?node != owl:Nothing) .\n" +
-                "\t?node soda:hasContext ?context .");
+                "\t?node rdf:type ?nodetype .\n");
+        if (aadm != null && !aadm.isEmpty()) {
+            query.append("\t\t?aadm soda:includesTemplate ?node .\n" +
+                    "\t\tFILTER (contains(str(?aadm), \"").append(aadm).append("\")).\n");
+        }
+        query.append("\tOPTIONAL {?node dcterms:description ?description .}\n" +
+                "\tFILTER (?nodetype != ").append(nodeType).append(" ) .\n")
+                .append("\tFILTER (?node != owl:Nothing) .\n").append("\t?node soda:hasContext ?context .");
         int i = 0;
         for (String name : parameters) {
             query.append("{\n").append("    ?context ").append(propType).append(" ?concept").append(i).append(" .\n")

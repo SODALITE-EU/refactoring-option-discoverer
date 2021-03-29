@@ -11,6 +11,7 @@ public class FindNodeInput {
     private String expr;
     private String repository;
     private String server;
+    private String aadm;
 
     public List<String> getVars() {
         return vars;
@@ -42,5 +43,13 @@ public class FindNodeInput {
 
     public void setServer(String server) {
         this.server = server;
+    }
+
+    public String getAadm() {
+        return aadm;
+    }
+
+    public void setAadm(String aadm) {
+        this.aadm = aadm;
     }
 }
