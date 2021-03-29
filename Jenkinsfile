@@ -20,7 +20,7 @@ pipeline {
 	stage ('Build refactoring-option-discoverer') {
       steps {
         sh  """ #!/bin/bash
-                mvn clean install
+                mvn  clean install -Ddefault.min.distinct.threshold=104857600
             """
       }
     }
