@@ -27,7 +27,6 @@ public class RefactoringOptionDiscovererKBApi {
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \r\n" +
             "PREFIX soda: <https://www.sodalite.eu/ontologies/sodalite-metamodel/> \r\n" +
             "PREFIX DUL: <http://www.loa-cnr.it/ontologies/DUL.owl#> \r\n" +
-            "PREFIX snow: <https://www.sodalite.eu/ontologies/snow-blueprint-containerized-OS/> \r\n" +
             "PREFIX dcterms: <http://purl.org/dc/terms/> \r\n" +
             "PREFIX owl: <http://www.w3.org/2002/07/owl#> \r\n";
     private KB kb;
@@ -125,8 +124,9 @@ public class RefactoringOptionDiscovererKBApi {
         int i = 0;
         for (String name : parameters) {
             query.append("{\n").append("    ?context ").append(propType).append(" ?concept").append(i).append(" .\n")
-                    .append("    OPTIONAL {?concept").append(i).append(" DUL:classifies snow:").append(name)
-                    .append(" .}\n").append("    OPTIONAL {?concept").append(i).append(" tosca:hasDataValue ?")
+                    .append("?concept").append(i).append(" DUL:classifies ?classifier").append(i).append(
+                    " FILTER (strends(str(?classifier").append(i).append("), \"/").append(name).append("\")).")
+                    .append("    OPTIONAL {?concept").append(i).append(" tosca:hasDataValue ?")
                     .append(name).append(" .}\n").append("    }");
             i++;
         }
