@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.SimpleBinding;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -132,6 +133,43 @@ public class RefactoringOptionDiscovererKBApi {
         }
         query.append(" Filter (").append(expr).append(")}");
         TupleQueryResult result = QueryUtil.evaluateSelectQuery(kb.getConnection(), query.toString());
+
+        while (result.hasNext()) {
+            BindingSet bindingSet = result.next();
+            IRI node = (IRI) bindingSet.getBinding("node").getValue();
+            String description = bindingSet.hasBinding("description")
+                    ? bindingSet.getBinding("description").getValue().stringValue()
+                    : null;
+            IRI superclass = (IRI) bindingSet.getBinding("nodetype").getValue();
+            Node n = new Node(node);
+            n.setDescription(description);
+            n.setType(superclass);
+            nodes.add(n);
+        }
+        result.close();
+        return nodes;
+    }
+
+    public Set<Node> getNodeMatchingReq(String req, String aadmstring) {
+        Set<Node> nodes = new HashSet<>();
+        String query = PREFIXES + "select DISTINCT ?node ?description ?nodetype ?v\n" +
+                "where {\n" +
+                "    ?aadm soda:includesTemplate ?node .\n" +
+                "    ?node sesame:directType ?nodetype ;\n" +
+                "    rdf:type soda:SodaliteSituation .\n" +
+                "    FILTER NOT EXISTS {\n" +
+                "      ?node rdfs:subClassOf tosca:tosca.entity.Root .\n" +
+                "    }\n" +
+                "    FILTER (?nodetype != rdfs:Resource && ?nodetype != DUL:Region)\n" +
+                "\tOPTIONAL {?node dcterms:description ?description .}\n" +
+                "\tFILTER (?node != owl:Nothing) .\n" +
+                "\t?node soda:hasContext/tosca:requirements ?requirement .\n" +
+                "    ?requirement DUL:classifies ?classifier .\n" +
+                "    ?requirement DUL:hasParameter [DUL:classifies ?r_i; tosca:hasObjectValue ?v] ." +
+                "    Filter (STRENDS(str(?v), " + "\""+
+                req + "\""+ "))}";
+        TupleQueryResult result = QueryUtil.evaluateSelectQuery(kb.getConnection(), query,
+                new SimpleBinding("aadm", kb.getFactory().createIRI(aadmstring)));
 
         while (result.hasNext()) {
             BindingSet bindingSet = result.next();
